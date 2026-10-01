@@ -46,7 +46,7 @@ from mac2.train import run_experiment
 
 results = run_experiment(
     dataset_name='Cora',
-    epochs=100,
+    epochs=400,
     gl_operator='weighted',
     lambda_gl=0.1,
 )
