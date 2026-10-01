@@ -94,8 +94,8 @@ Amazon-Computers, Coauthor-CS, Coauthor-Physics
 ## Results summary
 
 Across nine real-world benchmark datasets, MAC² improves clustering
-performance by 10.2% on average (NMI) over the strongest prior method,
-and scales to graphs where ~83% of baseline methods run out of memory.
+performance by 10.2% on average (across all metrics) over the strongest prior method,
+and scales better than ~83% of the baseline methods.
 See the paper for complete per-dataset results and ablation studies.
 
 ## Citation
