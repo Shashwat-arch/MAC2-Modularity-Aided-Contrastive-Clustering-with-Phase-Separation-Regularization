@@ -1,0 +1,55 @@
+# ── Core, required for every dataset ────────────────────────────────────
+# torch-scatter, torch-sparse, torch-cluster are compiled against a specific
+# torch + CUDA combination and are NOT reliably installable via a plain
+# `pip install -r requirements.txt` -- install torch first, check your
+# version, then install these three from PyG's own wheel index:
+#
+#   pip uninstall torch-scatter torch-sparse torch-geometric torch-cluster -y
+#   python -c "import torch; print(torch.__version__)"   # note the version
+#   pip install torch-scatter -f https://data.pyg.org/whl/torch-<VERSION>.html
+#   pip install torch-sparse  -f https://data.pyg.org/whl/torch-<VERSION>.html
+#   pip install torch-cluster -f https://data.pyg.org/whl/torch-<VERSION>.html
+#
+# (e.g. <VERSION> = 2.4.0+cu121 -- check https://data.pyg.org/whl/ for the
+# exact file matching your torch.__version__ and CUDA build)
+torch>=2.0
+torch-scatter
+torch-sparse
+torch-cluster
+# torch-geometric installed from source (latest/dev), per your snippet,
+# not from PyPI:
+git+https://github.com/pyg-team/pytorch_geometric.git
+networkx>=3.0
+scikit-learn>=1.3
+munkres>=1.1
+numpy>=1.24
+
+# ── Optional: OGB datasets (ogbn-arxiv, ogbn-products, ogbn-papers100M) ──
+# Only needed if you're loading anything through mac2.datasets with
+# kind='ogb'. Everything else in the package runs fine without it.
+ogb>=1.3.6
+
+# ── Optional: fast clustering-coefficient + Leiden comparator ───────────
+# python-igraph is used by preprocessing.get_clustering_coeff() for exact
+# transitivity at scale (Reddit/ogbn-* graphs) -- without it, the code
+# falls back to networkx, which will NOT scale to those graphs. leidenalg
+# is used only by evaluation.evaluate_all_clustering_methods() for the
+# optional Leiden comparator; both degrade gracefully (silently skipped)
+# if absent, via the try/except ImportError already in the code.
+python-igraph>=0.11
+leidenalg>=0.10
+
+# ── Optional: GPU-batched KMeans for large graphs ────────────────────────
+# `kmeans_cuda`, imported in evaluation.py, is NOT a standard PyPI package
+# under this exact name/API as far as could be verified -- it appears to
+# be a custom or private module in the environment this code was
+# originally developed in. The code already handles its absence
+# gracefully (falls back to sklearn's KMeans with n_init=20), so this is
+# safe to simply skip. If you have your own GPU-kmeans module, either:
+#   (a) install/vendor it under the name `kmeans_cuda` with a `kmeans(...)`
+#       function matching the call signature in evaluation.run_kmeans(), or
+#   (b) edit evaluation.py to call whichever GPU-kmeans package you use
+#       instead (e.g. torch-kmeans, https://pypi.org/project/torch-kmeans,
+#       has a different API and would need a small adapter).
+# Left commented out rather than guessed:
+# kmeans_cuda
